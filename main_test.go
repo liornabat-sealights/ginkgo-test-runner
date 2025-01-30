@@ -10,32 +10,6 @@ import (
 	"time"
 )
 
-var restyClient = resty.New().SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-
-func NewRestRequest() *resty.Request {
-
-	return restyClient.NewRequest()
-}
-
-func call(path string, a, b string) (*types.ResultResponse, error) {
-
-	time.Sleep(4 * time.Second)
-	result := &types.ResultResponse{}
-	resp, err := NewRestRequest().SetQueryParams(map[string]string{
-		"a": a,
-		"b": b,
-	}).SetResult(result).
-		Get("http://localhost:10000" + path)
-
-	if err != nil {
-		return nil, err
-	}
-	if resp.StatusCode() != 200 {
-		return nil, fmt.Errorf("response: %s", resp.String())
-	}
-	return result, nil
-}
-
 var _ = BeforeSuite(func() {
 	time.Sleep(2 * time.Second) // Wait for server to start
 })
